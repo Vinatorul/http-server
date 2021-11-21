@@ -51,7 +51,7 @@ add_library(Core::core ALIAS core)
 ##
 ################################################################################
 
-add_library(core_src src/core/http.cpp)
+add_library(core_src src/core/socket.cpp src/core/http.cpp src/core/server.cpp)
 target_link_libraries(core_src PUBLIC core)
 
 add_library(Core::core_src ALIAS core_src)
