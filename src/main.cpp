@@ -4,5 +4,6 @@
 
 int main() {
   core::ServeForever();
+  std::cout << "hello";
   return 0;
 }

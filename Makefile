@@ -1,17 +1,17 @@
-cmake:
+cmake-server:
 	@-cmake -B build -S . 
 
-build: src/*
+build-server: 
 	@-if [ ! -d "build" ]; then \
 		cmake -B build -S . ; \
 	fi
 	@-cmake --build build
 
-run:
+run-server:
 	@-build/http-server 
 
 clean:
 	@-rm -rf build
 
 format:
-	@-find src/ -iname *.h -o -iname *.?pp | xargs clang-format -i
+	@-find . -iname *.h -o -iname *.?pp | xargs clang-format -i

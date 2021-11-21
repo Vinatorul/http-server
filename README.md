@@ -1,5 +1,5 @@
 ## http-server
 
 ```
-$ make build && make run
+$ make build-server && make run-server
 ```
