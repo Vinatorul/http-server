@@ -1,5 +1,6 @@
 #include <core/socket.hpp>
 
+#include <cstring>
 #include <iostream>
 
 #include <netdb.h>
@@ -13,10 +14,28 @@ namespace {
 
 const int kQueueSize = 10000;
 
+const int kBufSize = 65535;
+
+std::string RecieveData(int socket_descriptor) {
+  std::string request;
+  static char buf[kBufSize];
+
+  while (1) {
+    memset(buf, 0, kBufSize);
+    auto recv_size = recv(socket_descriptor, buf, kBufSize, 0);
+    if (recv_size > 0) {
+      request += buf;
+    } else {
+      break;
+    }
+  }
+
+  return request;
+}
+
 void Respond(int socket_descriptor,
              std::function<std::string(std::string)> responder_callback) {
-  std::string request;
-  auto response = responder_callback(std::move(request));
+  auto response = responder_callback(RecieveData(socket_descriptor));
   send(socket_descriptor, response.c_str(), response.size(), 0);
 }
 }
@@ -44,9 +63,14 @@ int InitSocket(const std::string &hostname, const std::string &service) {
   for (auto option = options; option != nullptr; option = option->ai_next) {
     socket_descriptor =
         socket(option->ai_family, option->ai_socktype, option->ai_protocol);
+
     int reuse_address = 1;
     setsockopt(socket_descriptor, SOL_SOCKET, SO_REUSEADDR, &reuse_address,
                sizeof(reuse_address));
+
+    constexpr struct timeval tv { 0, 10000 };
+    setsockopt(socket_descriptor, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+
     if (socket_descriptor == -1) {
       continue;
     }
@@ -78,7 +102,6 @@ void AcceptConnection(
   socklen_t addrlen = sizeof(client_address);
   int client = accept(socket_descriptor, &client_address, &addrlen);
   if (client == -1) {
-    std::cerr << "Accept error" << std::endl;
     return;
   }
 
