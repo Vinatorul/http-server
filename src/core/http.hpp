@@ -3,5 +3,4 @@
 namespace core {
 
 void ServeForever();
-
 }

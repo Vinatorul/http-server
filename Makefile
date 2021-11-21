@@ -12,3 +12,6 @@ run:
 
 clean:
 	@-rm -rf build
+
+format:
+	@-find src/ -iname *.h -o -iname *.?pp | xargs clang-format -i

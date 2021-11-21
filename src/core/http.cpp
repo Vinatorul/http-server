@@ -2,9 +2,10 @@
 
 namespace core {
 
-void ServeForever() {
-    
+namespace {
+
+void InitServer() {}
 }
 
+void ServeForever() {}
 }
-
