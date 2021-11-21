@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 
-# set the project name
+include_directories("${CMAKE_SOURCE_DIR}/src")
+
+link_directories("${CMAKE_SOURCE_DIR}/src")
+
 project(http-server)
 
-# add the executable
-add_executable(http-server src/main.cpp)
+file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
+
+add_executable(${PROJECT_NAME} ${SOURCES})

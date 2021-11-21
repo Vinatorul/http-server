@@ -1,6 +1,8 @@
 #include <iostream>
 
+#include <core/http.hpp>
+
 int main() {
-    std::cout << "hello server\n";
+    core::ServeForever(); 
     return 0;
 }
